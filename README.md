@@ -3,6 +3,7 @@
 Go Red Lion Racing!
 
 Our BCM has the following core functions:
+
 -Measure vehicle positon, velocity and acceleration
 -Measure suspension accelerations
 -Measure Oil, Engine and CVT Temperatures
