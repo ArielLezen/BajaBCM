@@ -6,7 +6,7 @@
 - 5V -> 14.4v 1A Lead acid battery charge circuit over USB-C
 - **(OPTIONAL)** Solar panel -> 14.4v charge controller
 - Built-in 5v 2A regulator
-- 5v -> 3.3v LDO
+- 5v -> 3.3v Linear regulator
 - 6x VGA Out connectors with common pins
 - 5x voltage divider inputs for NTC thermistors
 
