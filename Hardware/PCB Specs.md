@@ -13,7 +13,7 @@
 **Board Hardware**
 - ESP32 Main board
 - SD Card slot over SPI
-- 3+ Channel I2C ADC
+- 4 Channel I2C ADC
 - Headers for attaching an IMU board on rubber isolators
 
 **Connector pinout**
