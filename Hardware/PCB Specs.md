@@ -24,11 +24,11 @@
 5. SDA
 6. Serial Tx
 7. Serial Rx
+7. Engine RPM
 6. FL Wheel Speed
 7. FR Wheel Speed
 8. RL Wheel Speed
 9. RR Wheel Speed
 10. Engine Oil Temp
-11. Engine Head Temp
 12. CVT Temp
-13. Solar panel input **(?)**
+13. Solar VIN(?)
