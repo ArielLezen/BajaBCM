@@ -15,6 +15,6 @@ Go Red Lion Racing!
 - NTC Thermistors (Engine, Oil and CVT Temp)
 - Adafruit Ultimate GPS (Absolute positioning @ 10hz)
 
-**Our hardware is as follows:*
+**Our hardware is as follows:**
 - ESP32-WROVER_IE (BCM - 8Mb Builtin memory)
 - Lilygo T5 E-ink (Driver interface display with SD Card interface)
