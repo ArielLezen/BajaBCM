@@ -11,10 +11,10 @@
 - 5x voltage divider inputs for NTC thermistors
 
 **Board Hardware**
-- ESP32 Main board
-- SD Card slot over SPI
+- ESP32-WROVER-IE Main board With 8Mb Memory
 - 4 Channel I2C ADC
 - Headers for attaching an IMU board on rubber isolators
+- Level shifter if required
 
 **Connector pinout**
 1. Ground
@@ -22,6 +22,8 @@
 3. 5V Supply
 4. SCL
 5. SDA
+6. Serial Tx
+7. Serial Rx
 6. FL Wheel Speed
 7. FR Wheel Speed
 8. RL Wheel Speed
@@ -30,5 +32,3 @@
 11. Engine Head Temp
 12. CVT Temp
 13. Solar panel input **(?)**
-14. Spare TBD
-15. Spare TBD
