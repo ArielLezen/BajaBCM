@@ -11,24 +11,11 @@
 - 5x voltage divider inputs for NTC thermistors
 
 **Board Hardware**
-- ESP32-WROVER-IE Main board With 8Mb Memory
-- 4 Channel I2C ADC
-- Headers for attaching an IMU board on rubber isolators
-- Level shifter if required
+- Headers for ESP32 Daughter board
+- Headers for attaching an I2C IMU board
+- Four automotive-style relays for outputs
 
-**Connector pinout**
-1. Ground
-2. VBAT
-3. 5V Supply
-4. SCL
-5. SDA
-6. Serial Tx
-7. Serial Rx
-7. Engine RPM
-6. FL Wheel Speed
-7. FR Wheel Speed
-8. RL Wheel Speed
-9. RR Wheel Speed
-10. Engine Oil Temp
-12. CVT Temp
-13. Solar VIN(?)
+**Connector schema**
+1. RJ45 for wheel speed and GPS sensors
+2. RJ12 for thermistor sensors
+3. 
