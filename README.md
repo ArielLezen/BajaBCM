@@ -14,6 +14,8 @@ Go Red Lion Racing!
 - Tronxy XY-08N Inductive sensors (Wheel speeds)
 - NTC Thermistors (Engine, Oil and CVT Temp)
 - Adafruit Ultimate GPS (Absolute positioning @ 10hz)
+- Car battery voltage sensor
+
 
 **Our hardware is as follows:**
 - ESP32-WROVER_IE (BCM - 8Mb Builtin memory)
