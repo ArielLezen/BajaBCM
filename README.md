@@ -12,7 +12,7 @@ Go Red Lion Racing!
 
 **The following sensors are being implemented as of Oct. 15:**
 - MPU6050 Accelerometer (Body and Upright Accelerations)
-- Tronxy XY-08N Inductive sensors (Wheel speeds)
+- SN-04 NPN Inductive sensors (Wheel speeds)
 - NTC Thermistors (Engine, Oil and CVT Temp)
 - Adafruit Ultimate GPS (Absolute positioning @ 10hz)
 - Car battery voltage sensor
