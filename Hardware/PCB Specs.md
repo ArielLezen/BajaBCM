@@ -21,3 +21,16 @@
 1. RJ45 for wheel speed and GPS sensors
 2. RJ12 for RPM and thermistor sensors
 3. TBD For high current accessories
+
+**ESP32 Pin Map**
+ - TX - TX (35)
+ - RX - RX (34)
+ - RL - G34
+ - RR - G35
+ - FL - G32
+ - FR - G33
+ - CAR_BAT - G25
+ - CVT_TEMP - G26
+ - ENG_TEMP - G27
+ - TRANS_TEMP - G14
+ - INT_ACC - G19
