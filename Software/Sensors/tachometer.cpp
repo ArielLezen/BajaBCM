@@ -1,9 +1,5 @@
 #include "Arduino.h"
-
-#define FRONTLEFT 0
-#define FRONTRIGHT 1
-#define BACKLEFT 2
-#define BACKRIGHT 3
+#include "tachometer.hpp"
 
 class Tachometer {
 
@@ -21,7 +17,7 @@ public:
         pin[BACKLEFT] = backLeft;
     }
 
-    int* update() {
+    int* update(Time* time) {
 
         reading[FRONTLEFT] = digitalRead(pin[FRONTLEFT]);
         reading[BACKRIGHT] = digitalRead(pin[BACKRIGHT]);
@@ -37,7 +33,7 @@ private:
     void calcSpeed() {
 
         speed = 69; // placeholder
-        
+
     };
 
 };

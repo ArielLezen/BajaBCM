@@ -5,6 +5,26 @@
 #include "Sensors/tachometer.cpp"
 #include "Sensors/thermometer.cpp"
 
+struct Time {
+    
+    unsigned long curr = 0;
+    unsigned long last;
+    int delta;
+    
+    Time() {
+        update();
+    };
+
+    void update() {
+        last = curr;
+        curr = millis();
+        delta = curr - last; // millis() rolls over after like a month and i think you'll have bigger problems if the car is constantly running that whole time
+    }
+
+};
+
+Time time;
+
 Accelerometer thermCVT;
 Accelerometer thermEngine;
 Accelerometer thermTrans;
@@ -26,19 +46,27 @@ void setup() {
     // Accelerometer
     accel = Accelerometer(PLACEHOLDER);
 
+    // time starts
+    time = Time();
+
 };
 
 void loop() {
 
+    time.update();
+
+    // Time
+    Serial.println(time.curr);
+
     // Thermometers
-    Serial.println(thermCVT.update());
-    Serial.println(thermEngine.update());
-    Serial.println(thermTrans.update());
+    Serial.println(thermCVT.update(&time));
+    Serial.println(thermEngine.update(&time));
+    Serial.println(thermTrans.update(&time));
 
     // Wheel Speed
-    Serial.println(wheels.update());
+    Serial.println(wheels.update(&time));
     
     // Accelerometer
-    Serial.println(accel.update());
+    Serial.println(accel.update(&time));
     
 };

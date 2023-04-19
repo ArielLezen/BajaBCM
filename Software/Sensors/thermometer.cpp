@@ -10,7 +10,7 @@ public:
         pin = pin_;
     }
 
-    int update() {
+    int update(Time* time) {
         temperature = analogRead(pin);
         return temperature;
     }

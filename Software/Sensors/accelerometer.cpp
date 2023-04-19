@@ -10,7 +10,7 @@ public:
         pin = pin_;
     }
 
-    int update() {
+    int update(Time* time) {
         vector = analogRead(pin);
         return vector;
     }
