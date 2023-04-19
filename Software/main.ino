@@ -2,16 +2,16 @@
 #include "pins.h"
 
 #include "Sensors/accelerometer.cpp"
-#include "Sensors/tachometer.cpp"
-#include "Sensors/thermometer.cpp"
+#include "Sensors/wheelTachometer.cpp"
+#include "Sensors/thermistor.cpp"
 
 struct Time {
     unsigned long curr;     // time of current update
     unsigned long last;     // time of previous update
     int delta;              // time since previous update
-    int updates;            // total amount of updates
-    Time() {
-        curr = 0;
+    unsigned int updates;   // total amount of updates, so we don't need to update some things every loop
+    Time(unsigned long startTime = 0) {
+        curr = startTime;
         update();
     };
     void update() {
@@ -24,29 +24,32 @@ struct Time {
 
 Time time;
 
-Accelerometer thermCVT;
-Accelerometer thermEngine;
-Accelerometer thermTrans;
+Thermistor thermCVT;
+Thermistor thermEngine;
+Thermistor thermTrans;
 
-Tachometer wheels;
+WheelTachometer wheels;
 
 Accelerometer accel;
 
 void setup() {
 
     // Thermometers
-    thermCVT = Accelerometer(CVTTHERM_PIN);
-    thermEngine = Accelerometer(ENGTHERM_PIN);
-    thermTrans = Accelerometer(TRANSTHERM_PIN);
+    thermCVT = Thermistor(CVTTHERM_PIN);
+    thermEngine = Thermistor(ENGTHERM_PIN);
+    thermTrans = Thermistor(TRANSTHERM_PIN);
 
     // Wheel Speed
-    wheels = Tachometer(WSSFL_PIN, WSSFR_PIN, WSSRL_PIN, WSSRR_PIN);
+    wheels = WheelTachometer(WSSFL_PIN, WSSFR_PIN, WSSRL_PIN, WSSRR_PIN);
 
     // Accelerometer
     accel = Accelerometer(PLACEHOLDER);
 
     // time starts
     time = Time();
+
+    // Initalize communication
+    Serial.begin(BAUD);
 
 };
 
