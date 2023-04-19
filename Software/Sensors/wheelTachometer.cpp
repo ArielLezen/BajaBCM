@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "wheelTachometer.hpp"
+#include "../constants.hpp"
 
 float R_THETA = WHEELRADIUS * (TAU / WHEELTEETH);
 
@@ -8,17 +8,22 @@ class WheelTachometer {
 public:
 
     int pin[4];
-    int curr[4] {0, 0, 0, 0}; // current reading
-    int prev[4] {0, 0, 0, 0}; // previous reading
+    int curr[4] {0, 0, 0, 0};       // current reading
+    int prev[4] {0, 0, 0, 0};       // previous reading
 
-    int lastPush[4] {0, 0, 0, 0}; // time since it was toggled on
-    float velocity[4] {0.0, 0.0, 0.0, 0.0};
+    int lastPush[4] {0, 0, 0, 0};   // time since it was toggled on
+    float velocity[4] {0, 0, 0, 0}; // linear velocity of each wheel
 
-    WheelTachometer(int frontRight, int frontLeft, int backRight, int backLeft) {
-        pin[FR_L] = frontLeft;
-        pin[FR_R] = frontRight;
-        pin[BA_L] = backLeft;
-        pin[BA_R] = backRight;
+    WheelTachometer(int pin_FrontRight, int pin_FrontLeft, int pin_BackRight, int pin_BackLeft) {
+        
+        // save pins
+        pin [] = {pin_FrontRight, pin_FrontLeft, pin_BackRight, pin_BackLeft};
+
+        // iterate for pin modes
+        for (int wheel = 0; wheel != 4; wheel++) {
+            pinMode(pin[wheel], INPUT);
+        }
+
     }
 
     /**
@@ -48,18 +53,15 @@ private:
     int* calculate(Time* time) {
 
         for (unsigned int wheel = 0; wheel != 4; wheel++) {
-            
-            if (!prev[wheel] && curr[wheel]) { // toggled on
+            if (prev[wheel] == LOW && curr[wheel] == HIGH) { // toggled on
                 lastPush[wheel] = time->curr - lastPush[wheel];
             }
             calcSpeed(wheel);
-
         }
 
         return lateUpdate(time);
 
     }
-
 
     /**
      * @brief cleanup for next update happens here,
