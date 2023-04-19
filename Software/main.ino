@@ -6,21 +6,20 @@
 #include "Sensors/thermometer.cpp"
 
 struct Time {
-    
-    unsigned long curr = 0;
-    unsigned long last;
-    int delta;
-    
+    unsigned long curr;     // time of current update
+    unsigned long last;     // time of previous update
+    int delta;              // time since previous update
+    int updates;            // total amount of updates
     Time() {
+        curr = 0;
         update();
     };
-
     void update() {
         last = curr;
         curr = millis();
         delta = curr - last; // millis() rolls over after like a month and i think you'll have bigger problems if the car is constantly running that whole time
-    }
-
+        updates++;
+    };
 };
 
 Time time;
