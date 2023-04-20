@@ -20,7 +20,7 @@
 #define CONST_D 1.009249522e-03     // Constant used in voltage to temperature converison
 
 /*
-    WHEEL SPEED CONSTANTS
+    WHEEL CONSTANTS
 */
 
 // Wheel pin indices

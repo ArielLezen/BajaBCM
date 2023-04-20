@@ -1,52 +1,34 @@
+#include <utility>
+
 #include "Arduino.h"
 #include "pins.h"
 
-#include "Sensors/accelerometer.cpp"
-#include "Sensors/wheelTachometer.cpp"
-#include "Sensors/thermistor.cpp"
+#include "sensors.cpp"
+#include "values.cpp"
 
-struct Time {
-    unsigned long curr;     // time of current update
-    unsigned long last;     // time of previous update
-    int delta;              // time since previous update
-    unsigned int updates;   // total amount of updates, so we don't need to update some things every loop
-    Time(unsigned long startTime = 0) {
-        curr = startTime;
-        update();
-    };
-    void update() {
-        last = curr;
-        curr = millis();
-        delta = curr - last; // millis() rolls over after like a month and i think you'll have bigger problems if the car is constantly running that whole time
-        updates++;
-    };
-};
-
-Time time;
-
-Thermistor thermCVT;
-Thermistor thermEngine;
-Thermistor thermTrans;
-
-WheelTachometer wheels;
-
-Accelerometer accel;
+#include "constants.hpp"
 
 void setup() {
 
+    Values curr = new Values();
+    Values prev = new Values();
+    //Values delta = new Values() // might not be used but is here idk?
+
     // Thermometers
-    thermCVT = Thermistor(CVTTHERM_PIN);
-    thermEngine = Thermistor(ENGTHERM_PIN);
-    thermTrans = Thermistor(TRANSTHERM_PIN);
+    SimpleSensor thermCVT = AnalogSensor(CVTTHERM_PIN);
+    SimpleSensor thermEngine = AnalogSensor(ENGTHERM_PIN);
+    SimpleSensor thermTrans = AnalogSensor(TRANSTHERM_PIN);
 
     // Wheel Speed
-    wheels = WheelTachometer(WSSFL_PIN, WSSFR_PIN, WSSRL_PIN, WSSRR_PIN);
+    SimpleSensor wheelSensors[4] = {
+        DigitalSensor(WSSFL_PIN),   // front left wheel
+        DigitalSensor(WSSFR_PIN),   // front right wheel
+        DigitalSensor(WSSRL_PIN),   // back left wheel
+        DigitalSensor(WSSRR_PIN)    // back right wheel
+    };
 
     // Accelerometer
-    accel = Accelerometer(PLACEHOLDER);
-
-    // time starts
-    time = Time();
+    Accelerometer accel = Accelerometer(0, 0, 0, 0, 0, 0); // placeholder values
 
     // Initalize communication
     Serial.begin(BAUD);
@@ -55,20 +37,65 @@ void setup() {
 
 void loop() {
 
-    time.update();
+    updateValues();
 
-    // Time
-    Serial.println(time.curr);
+    calculateThings();
 
-    // Thermometers
-    Serial.println(thermCVT.update(&time));
-    Serial.println(thermEngine.update(&time));
-    Serial.println(thermTrans.update(&time));
+    saveValues();
 
-    // Wheel Speed
-    Serial.println(wheels.update(&time));
-    
-    // Accelerometer
-    Serial.println(accel.update(&time));
-    
 };
+
+/**
+ * @brief this is where current values are read from the sensors
+ * 
+ */
+void updateValues() {
+    
+    curr.update(); // this only updates time
+
+    thermCVT.update();
+    thermEngine.update();
+    thermTrans.update();
+    
+    for (int i = 0; i < 4; i++) {
+        wheelSensors[i].update()
+    }
+
+    accel.update();
+    
+}
+
+/**
+ * @brief this is where we update the calculated values
+ * 
+ */
+void calculateThings() {
+
+    curr.vector = accel.vector;
+    
+    curr.velocity = calc::GPSVelocity(&curr, &prev)
+
+    for (int wheel = 0; wheel < 4; wheel++) {
+        if (prev.wheelData[wheel] == LOW && curr.wheelData[wheel]) { // only updates wheel speeds if it reads a pin since the delta is otherwise unknown
+            curr.lastPush[wheel] = curr.time;
+
+            curr.wheelVelocity[wheel] = calc::wheelSpeed(curr.lastPush[wheel], prev.lastPush[wheel])
+            
+            curr.slippage[wheel] = calc::slippage(&curr)
+        }
+    }
+    curr.vehicleSpeed = calc::speed(&curr); // overall vehicle speed
+    
+    curr.tempCVT = calc::temperature(thermCVT.value);
+    curr.tempEngine = calc::temperature(thermEngine.value);
+    curr.tempTrans = calc::temperature(thermTrans.value);
+
+}
+
+/**
+ * @brief this is where current values are saved for the next loop
+ * 
+ */
+void savePrev() {
+    std::swap(&curr, &prev);
+}
