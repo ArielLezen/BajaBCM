@@ -41,6 +41,8 @@ void loop() {
 
     calculateThings();
 
+    logData();
+
     saveValues();
 
 };
@@ -73,7 +75,7 @@ void calculateThings() {
 
     curr.vector = accel.vector;
     
-    curr.velocity = calc::GPSVelocity(&curr, &prev)
+    curr.position = calc::GPSPosition(&curr, &prev)
 
     for (int wheel = 0; wheel < 4; wheel++) {
         if (prev.wheelData[wheel] == LOW && curr.wheelData[wheel]) { // only updates wheel speeds if it reads a pin since the delta is otherwise unknown
@@ -90,6 +92,15 @@ void calculateThings() {
     curr.tempEngine = calc::temperature(thermEngine.value);
     curr.tempTrans = calc::temperature(thermTrans.value);
 
+}
+
+/**
+ * @brief save data
+ * 
+ */
+*/
+void logData() {
+    Serial.println(curr.toString());
 }
 
 /**
