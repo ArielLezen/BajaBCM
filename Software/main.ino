@@ -5,6 +5,7 @@
 
 #include "sensors.cpp"
 #include "values.cpp"
+#include "calc.cpp"
 
 #include "constants.hpp"
 
@@ -12,7 +13,7 @@ void setup() {
 
     Values curr = new Values();
     Values prev = new Values();
-    //Values delta = new Values() // might not be used but is here idk?
+    //Values delta = new Values(); // might not be used but is here idk?
 
     // Thermometers
     SimpleSensor thermCVT = AnalogSensor(CVTTHERM_PIN);
@@ -20,11 +21,11 @@ void setup() {
     SimpleSensor thermTrans = AnalogSensor(TRANSTHERM_PIN);
 
     // Wheel Speed
-    SimpleSensor wheelSensors[4] = {
-        DigitalSensor(WSSFL_PIN),   // front left wheel
-        DigitalSensor(WSSFR_PIN),   // front right wheel
-        DigitalSensor(WSSRL_PIN),   // back left wheel
-        DigitalSensor(WSSRR_PIN)    // back right wheel
+    WSS wheelSensors[4] = {
+        WSS(WSSFL_PIN),   // front left wheel
+        WSS(WSSFR_PIN),   // front right wheel
+        WSS(WSSRL_PIN),   // back left wheel
+        WSS(WSSRR_PIN)    // back right wheel
     };
 
     // Accelerometer
@@ -55,14 +56,11 @@ void updateValues() {
     
     curr.update(); // this only updates time
 
-    thermCVT.update();
-    thermEngine.update();
-    thermTrans.update();
+    // don't check thermistors every update
+    if (update % 6 = 0) { thermCVT.update(); }
+    if (update % 6 = 2) { thermEngine.update(); }
+    if (update % 6 = 4) { thermTrans.update(); }
     
-    for (int i = 0; i < 4; i++) {
-        wheelSensors[i].update()
-    }
-
     accel.update();
     
 }
@@ -78,16 +76,14 @@ void calculateThings() {
     curr.position = calc::GPSPosition(&curr, &prev)
 
     for (int wheel = 0; wheel < 4; wheel++) {
-        if (prev.wheelData[wheel] == LOW && curr.wheelData[wheel]) { // only updates wheel speeds if it reads a pin since the delta is otherwise unknown
-            curr.lastPush[wheel] = curr.time;
-
-            curr.wheelVelocity[wheel] = calc::wheelSpeed(curr.lastPush[wheel], prev.lastPush[wheel])
-            
-            curr.slippage[wheel] = calc::slippage(&curr)
+        if (wheelSensors[wheel].teeth >= WSS.COUNTER_THRESHOLD){
+            curr.wheelVelocity[wheel] = calc::wheelSpeed(curr, wheelSensors, wheel);
+            curr.slippage[wheel] = calc::slippage(&curr);
         }
     }
     curr.vehicleSpeed = calc::speed(&curr); // overall vehicle speed
     
+    // setting these every time since that's probably faster than checking if they got updated
     curr.tempCVT = calc::temperature(thermCVT.value);
     curr.tempEngine = calc::temperature(thermEngine.value);
     curr.tempTrans = calc::temperature(thermTrans.value);

@@ -13,6 +13,7 @@ struct SimpleSensor {
     void virtual update() = 0;
 
 };
+
 struct AnalogSensor : public SimpleSensor {
 
     void update() {
@@ -40,6 +41,34 @@ struct Accelerometer {
 
     void update() {
         vector = {0, 0, 0, 0, 0, 0}
+    }
+
+}
+
+struct WSS {
+
+    int pin;
+    int teeth;
+    unsigned long lastCalc;
+
+    static int COUNTER_THRESHOLD = 3;
+
+    WSS(int pin_) {
+        pin = pin_;
+        teeth = 0;
+        lastCalc = 0;
+
+        attachInterruptArg(pin, (void (*)(void*))ISR, NULL, CHANGE); // this might not work, not sure if it needs to be a standalone function of if the method i made works fine
+    }
+
+    // this might not work, i'm not sure how this function was supposed to be
+    void IRAM_ATTR ISR() {
+        teeth++;
+    }
+
+    int reset(Values* curr) {
+        teeth = 0;
+        lastCalc = curr->time;
     }
 
 }
