@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "pins.h"
 
+
 #include "sensors.cpp"
 #include "values.cpp"
 #include "calc.cpp"
@@ -27,6 +28,7 @@ void setup() {
         WSS(WSSRL_PIN),   // back left wheel
         WSS(WSSRR_PIN)    // back right wheel
     };
+
 
     // Accelerometer
     Accelerometer accel = Accelerometer(0, 0, 0, 0, 0, 0); // placeholder values

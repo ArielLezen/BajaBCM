@@ -33,3 +33,4 @@
 #define WHEELRADIUS 6.9         // Outer radius of the wheel in meters
 #define TAU 6.283185307179586   // Circle constant (the better one)
 #define WHEELTEETH 10           // Amount of pegs on the wheel that the sensor reads
+
